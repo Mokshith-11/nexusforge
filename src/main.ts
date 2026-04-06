@@ -309,7 +309,7 @@ function initContactForm(): void {
 
     // IMPORTANT: Replace the URL below with your actual Formspree endpoint URL
     // e.g. 'https://formspree.io/f/your_form_id'
-    const FORMSPREE_ENDPOINT = 'https://formspree.io/f/placeholder_id'; 
+    const FORMSPREE_ENDPOINT = 'https://formspree.io/f/mnjolblk';
 
     fetch(FORMSPREE_ENDPOINT, {
       method: 'POST',
