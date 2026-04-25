@@ -6,10 +6,13 @@ import './style.css';
 
 document.addEventListener('DOMContentLoaded', () => {
   initParticles();
+  initHeroScene();
+  initSectionDepth();
   initNavbar();
   initMobileMenu();
   initScrollReveal();
   initStatCounters();
+  initTiltedSurfaces();
   initPortfolioFilters();
   initTestimonialCarousel();
   initBackToTop();
@@ -19,6 +22,186 @@ document.addEventListener('DOMContentLoaded', () => {
   initFAQ();
   initLegalModals();
 });
+
+// -------- Section Depth Layers --------
+function initSectionDepth(): void {
+  const sections = document.querySelectorAll<HTMLElement>(
+    '.dashboard, .trusted, .about, .process, .services, .portfolio, .team, .testimonials, .pricing, .faq, .contact, .footer'
+  );
+
+  sections.forEach((section, index) => {
+    section.classList.add('depth-stage');
+
+    const layer = document.createElement('div');
+    layer.className = 'depth-stage__layer';
+
+    const grid = document.createElement('div');
+    grid.className = 'depth-stage__grid';
+
+    const orbA = document.createElement('div');
+    orbA.className = 'depth-stage__orb depth-stage__orb--a';
+
+    const orbB = document.createElement('div');
+    orbB.className = 'depth-stage__orb depth-stage__orb--b';
+
+    const beam = document.createElement('div');
+    beam.className = 'depth-stage__beam';
+
+    layer.append(grid, orbA, orbB, beam);
+    section.prepend(layer);
+
+    section.style.setProperty('--depth-rotation', `${(index % 2 === 0 ? 1 : -1) * 6}deg`);
+    section.style.setProperty('--depth-shift', `${12 + index * 2}px`);
+
+    section.addEventListener('pointermove', (event: PointerEvent) => {
+      if (window.innerWidth < 768) return;
+      const rect = section.getBoundingClientRect();
+      const x = ((event.clientX - rect.left) / rect.width - 0.5) * 24;
+      const y = ((event.clientY - rect.top) / rect.height - 0.5) * 20;
+      section.style.setProperty('--depth-move-x', `${x}px`);
+      section.style.setProperty('--depth-move-y', `${y}px`);
+      section.style.setProperty('--depth-glow-x', `${((event.clientX - rect.left) / rect.width) * 100}%`);
+      section.style.setProperty('--depth-glow-y', `${((event.clientY - rect.top) / rect.height) * 100}%`);
+    });
+
+    section.addEventListener('pointerleave', () => {
+      section.style.setProperty('--depth-move-x', '0px');
+      section.style.setProperty('--depth-move-y', '0px');
+      section.style.setProperty('--depth-glow-x', '50%');
+      section.style.setProperty('--depth-glow-y', '50%');
+    });
+  });
+
+  const onScroll = (): void => {
+    const viewportHeight = window.innerHeight;
+
+    sections.forEach(section => {
+      const rect = section.getBoundingClientRect();
+      const progress = (rect.top + rect.height * 0.5 - viewportHeight * 0.5) / viewportHeight;
+      section.style.setProperty('--depth-scroll', `${progress * -28}px`);
+    });
+  };
+
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+}
+
+// -------- Hero 3D Canvas --------
+function initHeroScene(): void {
+  const canvas = document.getElementById('heroScene') as HTMLCanvasElement | null;
+  if (!canvas) return;
+
+  const context = canvas.getContext('2d');
+  if (!context) return;
+
+  const scene = canvas.closest('.hero__scene') as HTMLElement | null;
+  if (!scene) return;
+
+  let width = 0;
+  let height = 0;
+  const pointer = { x: 0.5, y: 0.5, active: false };
+
+  const resize = (): void => {
+    const rect = scene.getBoundingClientRect();
+    width = rect.width;
+    height = rect.height;
+    const ratio = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.max(1, Math.floor(width * ratio));
+    canvas.height = Math.max(1, Math.floor(height * ratio));
+    canvas.style.width = `${width}px`;
+    canvas.style.height = `${height}px`;
+    context.setTransform(ratio, 0, 0, ratio, 0, 0);
+  };
+
+  const draw = (time: number): void => {
+    context.clearRect(0, 0, width, height);
+
+    const centerX = width * 0.5;
+    const centerY = height * 0.56;
+    const wave = time * 0.00045;
+    const parallaxX = (pointer.x - 0.5) * 22;
+    const parallaxY = (pointer.y - 0.5) * 16;
+
+    context.save();
+    context.translate(parallaxX, parallaxY);
+
+    for (let i = 0; i < 8; i++) {
+      const scale = 1 - i * 0.09;
+      const y = centerY + i * 18;
+      const alpha = 0.18 - i * 0.018;
+
+      context.beginPath();
+      context.strokeStyle = `rgba(106, 227, 255, ${Math.max(alpha, 0.04)})`;
+      context.lineWidth = 1;
+      context.ellipse(centerX, y, width * 0.35 * scale, height * 0.08 * scale, 0, 0, Math.PI * 2);
+      context.stroke();
+    }
+
+    for (let i = 0; i < 11; i++) {
+      const progress = i / 10;
+      const x = centerX - width * 0.28 + progress * width * 0.56;
+      context.beginPath();
+      context.strokeStyle = 'rgba(129, 140, 248, 0.12)';
+      context.moveTo(x, centerY - 110);
+      context.lineTo(centerX + (x - centerX) * 1.18, centerY + 120);
+      context.stroke();
+    }
+
+    const nodes = [
+      { angle: 0.3, radius: 120, size: 7, color: '#6ae3ff' },
+      { angle: 2.1, radius: 146, size: 6, color: '#ff8a5b' },
+      { angle: 4.2, radius: 132, size: 8, color: '#8effa0' },
+      { angle: 5.5, radius: 164, size: 5, color: '#ffe27a' }
+    ];
+
+    nodes.forEach((node, index) => {
+      const angle = wave + node.angle + index * 0.2;
+      const x = centerX + Math.cos(angle) * node.radius;
+      const y = centerY + Math.sin(angle) * (node.radius * 0.38);
+
+      context.beginPath();
+      context.strokeStyle = 'rgba(255,255,255,0.12)';
+      context.moveTo(centerX, centerY);
+      context.lineTo(x, y);
+      context.stroke();
+
+      const glow = context.createRadialGradient(x, y, 0, x, y, node.size * 4);
+      glow.addColorStop(0, node.color);
+      glow.addColorStop(1, 'rgba(255,255,255,0)');
+      context.fillStyle = glow;
+      context.beginPath();
+      context.arc(x, y, node.size * 4, 0, Math.PI * 2);
+      context.fill();
+
+      context.fillStyle = node.color;
+      context.beginPath();
+      context.arc(x, y, node.size, 0, Math.PI * 2);
+      context.fill();
+    });
+
+    context.restore();
+    window.requestAnimationFrame(draw);
+  };
+
+  const updatePointer = (event: PointerEvent): void => {
+    const rect = scene.getBoundingClientRect();
+    pointer.x = (event.clientX - rect.left) / rect.width;
+    pointer.y = (event.clientY - rect.top) / rect.height;
+    pointer.active = true;
+  };
+
+  const resetPointer = (): void => {
+    pointer.x = 0.5;
+    pointer.y = 0.5;
+    pointer.active = false;
+  };
+
+  resize();
+  draw(0);
+  window.addEventListener('resize', resize);
+  scene.addEventListener('pointermove', updatePointer);
+  scene.addEventListener('pointerleave', resetPointer);
+}
 
 // -------- Particle Background --------
 function initParticles(): void {
@@ -56,6 +239,40 @@ function initNavbar(): void {
     } else {
       navbar.classList.remove('scrolled');
     }
+  });
+}
+
+// -------- Tilted Surfaces --------
+function initTiltedSurfaces(): void {
+  const selectors = [
+    '[data-tilt]',
+    '.dash-card',
+    '.pricing-card',
+    '.portfolio__item',
+    '.team-card',
+    '.testimonial-card'
+  ];
+
+  const cards = document.querySelectorAll<HTMLElement>(selectors.join(','));
+
+  cards.forEach(card => {
+    card.addEventListener('pointermove', (event: PointerEvent) => {
+      if (window.innerWidth < 768) return;
+
+      const rect = card.getBoundingClientRect();
+      const x = (event.clientX - rect.left) / rect.width;
+      const y = (event.clientY - rect.top) / rect.height;
+      const rotateY = (x - 0.5) * 14;
+      const rotateX = (0.5 - y) * 12;
+
+      card.style.transform = `perspective(1400px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-10px)`;
+      card.style.setProperty('--pointer-x', `${x * 100}%`);
+      card.style.setProperty('--pointer-y', `${y * 100}%`);
+    });
+
+    card.addEventListener('pointerleave', () => {
+      card.style.transform = '';
+    });
   });
 }
 
