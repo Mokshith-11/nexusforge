@@ -1,0 +1,296 @@
+/* ============================================================
+   Services Page Styles
+   ============================================================ */
+
+/* --- Hero Section --- */
+.hero {
+  padding: var(--space-5xl) 0 var(--space-4xl);
+  text-align: center;
+  position: relative;
+}
+
+.heroContent {
+  position: relative;
+  z-index: 1;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.heroBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-xs) var(--space-md);
+  background: var(--primary-light);
+  border: 1px solid rgba(124, 58, 237, 0.3);
+  border-radius: var(--radius-full);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--primary-hover);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: var(--space-lg);
+}
+
+.heroTitle {
+  font-size: var(--text-5xl);
+  font-weight: 800;
+  margin-bottom: var(--space-xl);
+  line-height: 1.1;
+}
+
+.heroSubtitle {
+  font-size: var(--text-lg);
+  color: var(--text-secondary);
+  line-height: 1.7;
+  max-width: 650px;
+  margin: 0 auto;
+}
+
+/* --- Service Detail Section --- */
+.serviceSection {
+  padding: var(--space-4xl) 0;
+  position: relative;
+}
+
+.serviceGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4xl);
+  align-items: center;
+}
+
+.serviceGrid.reversed {
+  direction: rtl;
+}
+
+.serviceGrid.reversed > * {
+  direction: ltr;
+}
+
+.serviceVisual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.serviceIconBox {
+  width: 280px;
+  height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-glass);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-xl);
+  font-size: 6rem;
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+}
+
+.serviceIconBox::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  background: var(--gradient-border);
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.serviceIconBox:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--glow-violet);
+}
+
+.serviceContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.serviceNumber {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--primary-hover);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.serviceTitle {
+  font-size: var(--text-3xl);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.serviceDescription {
+  font-size: var(--text-base);
+  color: var(--text-secondary);
+  line-height: 1.8;
+  max-width: 500px;
+}
+
+.featureList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  margin-top: var(--space-sm);
+}
+
+.featureItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  font-size: var(--text-base);
+  color: var(--text-secondary);
+}
+
+.checkmark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  background: var(--accent-light);
+  border-radius: var(--radius-sm);
+  color: var(--accent);
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.serviceLink {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: var(--text-base);
+  color: var(--primary-hover);
+  transition: all var(--transition-fast);
+  margin-top: var(--space-sm);
+}
+
+.serviceLink:hover {
+  color: var(--text-primary);
+  gap: var(--space-md);
+}
+
+.serviceLinkArrow {
+  transition: transform var(--transition-fast);
+}
+
+.serviceLink:hover .serviceLinkArrow {
+  transform: translateX(4px);
+}
+
+/* --- Divider --- */
+.divider {
+  width: 100%;
+  max-width: 200px;
+  height: 1px;
+  margin: 0 auto;
+  background: var(--gradient-border);
+  border: none;
+}
+
+/* --- CTA Section --- */
+.ctaSection {
+  padding: var(--space-5xl) 0;
+  text-align: center;
+}
+
+.ctaCard {
+  padding: var(--space-4xl) var(--space-3xl);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.ctaCard::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  background: var(--gradient-border);
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.ctaTitle {
+  font-size: var(--text-4xl);
+  font-weight: 700;
+  margin-bottom: var(--space-lg);
+}
+
+.ctaSubtitle {
+  font-size: var(--text-lg);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-2xl);
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.ctaActions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-lg);
+  flex-wrap: wrap;
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+  .hero {
+    padding: var(--space-3xl) 0 var(--space-2xl);
+  }
+
+  .serviceGrid {
+    grid-template-columns: 1fr;
+    gap: var(--space-2xl);
+    text-align: center;
+  }
+
+  .serviceGrid.reversed {
+    direction: ltr;
+  }
+
+  .serviceDescription {
+    max-width: 100%;
+  }
+
+  .serviceIconBox {
+    width: 200px;
+    height: 200px;
+    font-size: 4rem;
+  }
+
+  .featureList {
+    align-items: center;
+  }
+
+  .serviceLink {
+    justify-content: center;
+  }
+
+  .serviceVisual {
+    order: -1;
+  }
+
+  .ctaCard {
+    padding: var(--space-3xl) var(--space-xl);
+  }
+}

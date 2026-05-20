@@ -1,0 +1,237 @@
+/* ============================================================
+   ServicesGrid — Bento Grid Layout
+   ============================================================ */
+
+.section {
+  padding: var(--space-5xl) 0;
+  position: relative;
+}
+
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--container-padding);
+}
+
+/* --- Section Header --- */
+.header {
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto var(--space-4xl);
+}
+
+.subtitle {
+  font-size: var(--text-lg);
+  color: var(--text-secondary);
+  line-height: 1.7;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* --- Bento Grid --- */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-xl);
+}
+
+/* First 2 cards span full column width — they are the "featured" cards */
+.card:nth-child(1),
+.card:nth-child(2) {
+  /* Stay as default 1-col span in the 2-col grid */
+}
+
+/* Bottom 4 cards: switch to 4-col sub-grid */
+.gridSmall {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-xl);
+  grid-column: 1 / -1;
+}
+
+/* --- Card Wrapper (for 3D perspective) --- */
+.cardWrapper {
+  perspective: 800px;
+  position: relative;
+}
+
+/* Glow behind card on hover */
+.cardWrapper::before {
+  content: '';
+  position: absolute;
+  inset: 20%;
+  background: radial-gradient(
+    circle,
+    rgba(124, 58, 237, 0.15),
+    transparent 70%
+  );
+  border-radius: 50%;
+  filter: blur(40px);
+  opacity: 0;
+  transition: opacity var(--transition-slow);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.cardWrapper:hover::before {
+  opacity: 1;
+}
+
+/* --- Card --- */
+.card {
+  position: relative;
+  background: var(--bg-glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-lg);
+  padding: var(--space-2xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  transition: all var(--transition-base);
+  transform-style: preserve-3d;
+  will-change: transform;
+  z-index: 1;
+  height: 100%;
+}
+
+.card:hover {
+  background: var(--bg-glass-hover);
+  border-color: transparent;
+}
+
+/* Gradient border on hover */
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  background: var(--gradient-border);
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--transition-base);
+}
+
+.card:hover::before {
+  opacity: 1;
+}
+
+/* Shimmer sweep on hover */
+.card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.03),
+    transparent
+  );
+  transition: none;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.card:hover::after {
+  animation: shimmer 0.8s ease-out forwards;
+}
+
+@keyframes shimmer {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+/* --- Card Content --- */
+.icon {
+  font-size: 2.5rem;
+  line-height: 1;
+  margin-bottom: var(--space-sm);
+  filter: drop-shadow(0 0 8px rgba(124, 58, 237, 0.3));
+}
+
+.cardTitle {
+  font-family: var(--font-heading);
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.cardDesc {
+  font-size: var(--text-base);
+  color: var(--text-secondary);
+  line-height: 1.7;
+  flex: 1;
+}
+
+.cardLink {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--primary-hover);
+  margin-top: auto;
+  transition: all var(--transition-fast);
+}
+
+.cardLink:hover {
+  gap: var(--space-md);
+  color: var(--accent);
+}
+
+.arrow {
+  transition: transform var(--transition-fast);
+  display: inline-block;
+}
+
+.cardLink:hover .arrow {
+  transform: translateX(4px);
+}
+
+/* --- Responsive --- */
+@media (max-width: 1024px) {
+  .gridSmall {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .gridSmall {
+    grid-template-columns: 1fr;
+  }
+
+  .card {
+    padding: var(--space-xl);
+  }
+
+  .icon {
+    font-size: 2rem;
+  }
+}
+
+/* --- Reduced Motion --- */
+@media (prefers-reduced-motion: reduce) {
+  .card::after {
+    animation: none !important;
+  }
+
+  .card {
+    transition: none;
+  }
+}

@@ -1,0 +1,194 @@
+/* ============================================================
+   FAQ — Accordion with smooth expand/collapse
+   ============================================================ */
+
+.section {
+  padding: var(--space-5xl) 0;
+  position: relative;
+}
+
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--container-padding);
+}
+
+.header {
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto var(--space-4xl);
+}
+
+/* --- FAQ List Container --- */
+.list {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* --- FAQ Item --- */
+.item {
+  border-bottom: 1px solid var(--border-glass);
+}
+
+.item:last-child {
+  border-bottom: none;
+}
+
+/* --- Question Button --- */
+.question {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-lg);
+  padding: var(--space-xl) 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: color var(--transition-fast);
+}
+
+.questionText {
+  font-family: var(--font-heading);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.4;
+  transition: color var(--transition-fast);
+}
+
+.questionTextActive {
+  background: var(--gradient-text);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Focus styles for keyboard nav */
+.question:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 4px;
+  border-radius: var(--radius-sm);
+}
+
+.question:hover .questionText {
+  color: var(--primary-hover);
+}
+
+.question:hover .questionTextActive {
+  -webkit-text-fill-color: transparent;
+}
+
+/* --- Expand/Collapse Icon --- */
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-glass);
+  border: 1px solid var(--border-glass);
+  flex-shrink: 0;
+  transition: all var(--transition-base);
+  position: relative;
+}
+
+/* Plus/Minus using pseudo-elements */
+.icon::before,
+.icon::after {
+  content: '';
+  position: absolute;
+  background: var(--text-secondary);
+  border-radius: 1px;
+  transition: all var(--transition-base);
+}
+
+/* Horizontal bar (always visible) */
+.icon::before {
+  width: 14px;
+  height: 2px;
+}
+
+/* Vertical bar (collapses when active) */
+.icon::after {
+  width: 2px;
+  height: 14px;
+}
+
+.iconActive {
+  background: var(--primary-light);
+  border-color: rgba(124, 58, 237, 0.3);
+  transform: rotate(0deg);
+}
+
+.iconActive::before {
+  background: var(--primary-hover);
+}
+
+.iconActive::after {
+  background: var(--primary-hover);
+  height: 0;
+  opacity: 0;
+}
+
+/* --- Answer Panel --- */
+.answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.3s ease;
+  opacity: 0;
+}
+
+.answerOpen {
+  max-height: 300px;
+  opacity: 1;
+}
+
+.answerContent {
+  padding: 0 0 var(--space-xl) 0;
+  font-size: var(--text-base);
+  color: var(--text-secondary);
+  line-height: 1.8;
+  max-width: none;
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+  .questionText {
+    font-size: var(--text-base);
+  }
+
+  .question {
+    padding: var(--space-lg) 0;
+  }
+
+  .icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .icon::before {
+    width: 12px;
+  }
+
+  .icon::after {
+    height: 12px;
+  }
+}
+
+/* --- Reduced Motion --- */
+@media (prefers-reduced-motion: reduce) {
+  .answer {
+    transition: none;
+  }
+
+  .icon,
+  .icon::before,
+  .icon::after {
+    transition: none;
+  }
+}
